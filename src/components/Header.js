@@ -1,13 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import {
-  faGithub,
-  faLinkedin,
-  faMedium,
-  faStackOverflow,
-} from "@fortawesome/free-brands-svg-icons";
-import { Box, HStack } from "@chakra-ui/react";
+import { faGithub, faLinkedin, faMedium, faStackOverflow } from "@fortawesome/free-brands-svg-icons";
+import { Box, HStack, position } from "@chakra-ui/react";
 
 const socials = [
   {
@@ -33,9 +28,31 @@ const socials = [
 ];
 
 const Header = () => {
-  const handleClick = (anchor) => () => {
+  const headerRef = useRef();
+
+  let position = 0;
+  function handleScroll(e) {
+    const oldPosition = position;
+    position = window.scrollY;
+    if (oldPosition < position) {
+      headerRef.current.style.transform = "translateY(-200px)";
+    } else {
+      headerRef.current.style.transform = "translateY(0px)";
+    }
+  }
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      headerRef.current.style.transform = "translateY(0px)";
+    };
+  });
+
+  const handleClick = (anchor) => {
     const id = `${anchor}-section`;
+    console.log(id);
     const element = document.getElementById(id);
+
     if (element) {
       element.scrollIntoView({
         behavior: "smooth",
@@ -55,20 +72,30 @@ const Header = () => {
       transitionDuration=".3s"
       transitionTimingFunction="ease-in-out"
       backgroundColor="#18181b"
+      ref={headerRef}
     >
       <Box color="white" maxWidth="1280px" margin="0 auto">
-        <HStack
-          px={16}
-          py={4}
-          justifyContent="space-between"
-          alignItems="center"
-        >
+        <HStack px={16} py={4} justifyContent="space-between" alignItems="center">
           <nav>
-            {/* Add social media links based on the `socials` data */}
+            <HStack spacing={8}>
+              {socials.map((social, index) => {
+                return (
+                  <a key={social.url} href={social.url} target="_blank" rel="noreferrer noopener">
+                    <FontAwesomeIcon icon={social.icon} size="2x" />
+                  </a>
+                );
+              })}
+            </HStack>
           </nav>
           <nav>
             <HStack spacing={8}>
-              {/* Add links to Projects and Contact me section */}
+              <a href="/#projects" onClick={() => handleClick("projects")}>
+                {" "}
+                Projects
+              </a>
+              <a href="/#contact-me" onClick={() => handleClick("contactme")}>
+                Contact Me
+              </a>
             </HStack>
           </nav>
         </HStack>
