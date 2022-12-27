@@ -32,14 +32,14 @@ const projects = [
 
 const ProjectsSection = () => {
   return (
-    <FullScreenSection id="projects-section"
+    <FullScreenSection
       backgroundColor="#14532d"
       isDarkBackground
       p={8}
       alignItems="flex-start"
       spacing={8}
     >
-      <Heading as="h1">
+      <Heading as="h1" id="projects-section">
         Featured Projects
       </Heading>
       <Box

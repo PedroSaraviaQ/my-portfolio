@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import { useFormik } from "formik";
 import {
   Box,
@@ -11,43 +11,21 @@ import {
   Select,
   Textarea,
   VStack,
-
 } from "@chakra-ui/react";
 import * as Yup from 'yup';
 import FullScreenSection from "./FullScreenSection";
 import useSubmit from "../hooks/useSubmit";
-import { useAlertContext } from "../context/alertContext";
+import {useAlertContext} from "../context/alertContext";
 
 const LandingSection = () => {
-  const { isLoading, response, submit } = useSubmit();
-  const { onOpen , onClose} = useAlertContext();
+  const {isLoading, response, submit} = useSubmit();
+  const { onOpen } = useAlertContext();
 
   const formik = useFormik({
-    initialValues: { firstName: "", email: "", type: "", comment: "" },
-    onSubmit: (values) => { submit("", values) },
-    validationSchema: Yup.object({
-      firstName: Yup.string()
-        .max(55, 'Name length cannot be more than 55 characters')
-        .required("Required"),
-      email: Yup.string()
-        .email('Email has been enterd in non-email format')
-        .required("Required"),
-      comment: Yup.string()
-        .min(25, 'Please complete your comment, at least 25 characters expected')
-        .required("Required"),
-    }),
+    initialValues: {},
+    onSubmit: (values) => {},
+    validationSchema: Yup.object({}),
   });
-
-  useEffect(() => {
-    if (response) {
-      onOpen(response.type, response.message);
-      formik.resetForm();
-      return () => {
-        onClose();
-      }
-    }
-  });
-
 
   return (
     <FullScreenSection
@@ -56,43 +34,29 @@ const LandingSection = () => {
       py={16}
       spacing={8}
     >
-
       <VStack w="1024px" p={32} alignItems="flex-start">
         <Heading as="h1" id="contactme-section">
           Contact me
         </Heading>
         <Box p={6} rounded="md" w="100%">
-          <form onSubmit={formik.handleSubmit}>
+          <form>
             <VStack spacing={4}>
-              <FormControl isInvalid={(formik.touched.firstName && formik.errors.firstName)}>
+              <FormControl isInvalid={false}>
                 <FormLabel htmlFor="firstName">Name</FormLabel>
                 <Input
                   id="firstName"
                   name="firstName"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.firstName}
                 />
-                {formik.touched.firstName && formik.errors.firstName ? (
-                  <FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
-                ) : null}
-
+                <FormErrorMessage></FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={formik.touched.email && formik.errors.email}>
+              <FormControl isInvalid={false}>
                 <FormLabel htmlFor="email">Email Address</FormLabel>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.email}
                 />
-                {formik.touched.email && formik.errors.email ? (
-                  <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
-                ) : null}
-
-
+                <FormErrorMessage></FormErrorMessage>
               </FormControl>
               <FormControl>
                 <FormLabel htmlFor="type">Type of enquiry</FormLabel>
@@ -104,24 +68,18 @@ const LandingSection = () => {
                   <option value="other">Other</option>
                 </Select>
               </FormControl>
-              <FormControl isInvalid={formik.touched.comment && formik.errors.comment}>
+              <FormControl isInvalid={false}>
                 <FormLabel htmlFor="comment">Your message</FormLabel>
                 <Textarea
                   id="comment"
                   name="comment"
                   height={250}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.comment}
                 />
-                {formik.touched.comment && formik.errors.comment ? (
-                  <FormErrorMessage>{formik.errors.comment}</FormErrorMessage>
-                ) : null}
-
+                <FormErrorMessage></FormErrorMessage>
               </FormControl>
-              {isLoading?(
-              <Button isLoading type="submit" colorScheme="purple" width="full"/>):
-              (<Button type="submit" colorScheme="purple" width="full">Submit</Button>)}
+              <Button type="submit" colorScheme="purple" width="full">
+                Submit
+              </Button>
             </VStack>
           </form>
         </Box>
